@@ -111,7 +111,7 @@ export default function NavBar() {
               /* Sign in with Google button */
               <button
                 onClick={handleGoogleLogin}
-                className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-500"
+                className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-500 hidden sm:block"
               >
                 Sign in with Google
               </button>
@@ -144,7 +144,7 @@ export default function NavBar() {
           ) : (
             <button
               onClick={handleGoogleLogin}
-              className="block w-full bg-gray-50 px-5 py-3 text-center font-medium text-indigo-600 hover:bg-gray-100"
+              className="block w-full bg-indigo-600 px-5 py-3 text-center font-medium text-white hover:bg-indigo-500"
             >
               Sign in with Google
             </button>
