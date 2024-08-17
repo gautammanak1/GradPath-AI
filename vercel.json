@@ -1,14 +1,14 @@
 {
-  "public": "./public",
-  "rewrites": [
-    { "source": "/public/(.*)", "destination": "/$1" }
-  ],
-  "headers": [
-    {
-      "source": "/(.*).svg",
-      "headers": [
-        { "key": "Content-Type", "value": "image/svg+xml" }
-      ]
-    }
-  ]
-}
+    "headers": [
+      {
+        "source": "/(.*).svg",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "/assets/svg+xml"
+          }
+        ]
+      }
+    ]
+  }
+  

@@ -8,7 +8,7 @@ const FetchPlatformSection = () => {
         {/* Left SVG */}
         <img
           alt="Left SVG"
-          src="left-svg.svg"
+          src="/left-svg.svg"
           className="hidden lg:block lg:w-1/3 absolute left-0 bottom-8 transform -translate-x-1/2"
         />
         <div className="mt-8 flex space-x-4">
@@ -22,7 +22,7 @@ const FetchPlatformSection = () => {
         {/* Right SVG */}
         <img
           alt="Right SVG"
-          src="right-svg.svg"
+          src="/right-svg.svg"
           className="hidden lg:block lg:w-1/3 absolute right-0 bottom-8 transform translate-x-1/2"
         />
       </div>

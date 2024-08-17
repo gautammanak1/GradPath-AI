@@ -18,7 +18,7 @@ const ContentSection = () => {
         <div className="grid grid-cols-2 gap-4 mt-8">
           <img
             className="w-full rounded-lg"
-            src="job1.jpg"
+            src="/job1.jpg"
             alt="office content 1"
           />
           <img
