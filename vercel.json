@@ -1,54 +1,11 @@
 {
-    "version": 2,
-    "builds": [
-      {
-        "src": "package.json",
-        "use": "@vercel/node"
-      }
-    ],
-    "routes": [
-      {
-        "src": "/api/(.*)",
-        "dest": "/api/$1"
-      },
-      {
-        "src": "/(.*)",
-        "dest": "/index.html"
-      }
-    ],
     "headers": [
       {
         "source": "/(.*).svg",
         "headers": [
           {
             "key": "Content-Type",
-            "value": "image/svg+xml"
-          }
-        ]
-      }
-    ],
-    "rewrites": [
-      {
-        "source": "/old-path",
-        "destination": "/new-path"
-      }
-    ],
-    "redirects": [
-      {
-        "source": "/old-page",
-        "destination": "/new-page",
-        "statusCode": 301
-      }
-    ],
-    "cleanUrls": true,
-    "trailingSlash": false,
-    "cache": [
-      {
-        "source": "/(.*).(js|css|svg|png|jpg|jpeg|woff2)",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "public, max-age=31536000, immutable"
+            "value": "/assets/svg+xml"
           }
         ]
       }
