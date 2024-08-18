@@ -1,6 +1,4 @@
-import { useState } from 'react';
-import { addDoc, collection } from 'firebase/firestore';
-import { db } from '../firebaseConfig';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const JobPostForm = () => {
@@ -10,7 +8,7 @@ const JobPostForm = () => {
     location: '',
     description: '',
     technologies: '',
-    jobType: 'Full-Time',
+    employmentType: '',
     applyLink: '',
     name: '',
     email: '',
@@ -18,10 +16,13 @@ const JobPostForm = () => {
     logo: '',
     salaryPackage: 'Negotiable',
     experience: '',
-    postedAt: new Date(),
+    jobType: 'Full-Time',
+    jobCategory: '',
+    postedAt: new Date().toISOString(),
   });
 
-  const jobsCollectionRef = collection(db, 'jobs');
+  const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
@@ -31,29 +32,47 @@ const JobPostForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await addDoc(jobsCollectionRef, {
-      ...newJob,
-      technologies: newJob.technologies.split(','),
-      postedAt: newJob.postedAt,
-    });
+    setLoading(true);
 
-    // Reset form fields
-    setNewJob({
-      title: '',
-      company: '',
-      location: '',
-      description: '',
-      technologies: '',
-      jobType: 'Full-Time',
-      applyLink: '',
-      name: '',
-      email: '',
-      mobile: '',
-      logo: '',
-      salaryPackage: 'Negotiable',
-      experience: '',
-      postedAt: new Date(),
-    });
+    try {
+      const response = await fetch('http://localhost:5000/api/add_job/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newJob),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        setMessage('Job posted successfully!');
+        // Reset the form fields
+        setNewJob({
+          title: '',
+          company: '',
+          location: '',
+          description: '',
+          technologies: '',
+          employmentType: '',
+          applyLink: '',
+          name: '',
+          email: '',
+          mobile: '',
+          logo: '',
+          salaryPackage: 'Negotiable',
+          experience: '',
+          jobType: 'Full-Time',
+          jobCategory: '',
+          postedAt: new Date().toISOString(),
+        });
+      } else {
+        setMessage(data.error);
+      }
+    } catch (error) {
+      setMessage('An error occurred. Please try again.');
+    }
+
+    setLoading(false);
   };
 
   return (
@@ -66,6 +85,9 @@ const JobPostForm = () => {
         Back
       </button>
       <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Message */}
+        {message && <p className="text-center text-red-500">{message}</p>}
+        
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-sm font-medium text-gray-700">Job Title</label>
@@ -175,6 +197,17 @@ const JobPostForm = () => {
               <option value="Contract">Contract</option>
             </select>
           </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Job Category</label>
+            <input
+              type="text"
+              className="mt-1 p-4 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
+              placeholder="Enter job category"
+              name="jobCategory"
+              value={newJob.jobCategory}
+              onChange={handleInputChange}
+            />
+          </div>
           <div className="col-span-2">
             <label className="block text-sm font-medium text-gray-700">Apply Link</label>
             <input
@@ -216,7 +249,7 @@ const JobPostForm = () => {
             <input
               type="tel"
               className="mt-1 p-4 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
-              placeholder="Enter contact mobile"
+              placeholder="Enter contact mobile number"
               name="mobile"
               value={newJob.mobile}
               onChange={handleInputChange}
@@ -224,11 +257,13 @@ const JobPostForm = () => {
             />
           </div>
         </div>
+
         <button
           type="submit"
-          className="w-full bg-indigo-600 text-white py-3 px-6 rounded-lg hover:bg-indigo-700"
+          disabled={loading}
+          className="bg-indigo-600 text-white py-3 px-6 rounded-lg hover:bg-indigo-700 w-full"
         >
-          Post Job
+          {loading ? 'Posting...' : 'Post Job'}
         </button>
       </form>
     </div>

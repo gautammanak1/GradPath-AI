@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getDocs, collection } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
 import { db } from '../firebaseConfig';
 
 const JobListPage = () => {
@@ -14,6 +15,7 @@ const JobListPage = () => {
   const [jobsPerPage, setJobsPerPage] = useState(5);
 
   const jobsCollectionRef = collection(db, 'jobs');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -53,8 +55,12 @@ const JobListPage = () => {
     }
   };
 
+  const handleBrowseAllJobs = () => {
+    navigate('/job'); // Adjust the path as per your routing setup
+  };
+
   return (
-    <div className="min-h-screen bg-gray-100 py-10 px-4">
+    <div className="min-h-screen bg-[#F9FAFB] py-10 px-4">
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row">
         {/* Filter Section */}
         <div className="w-full lg:w-1/4 mb-8 lg:mb-0 lg:mr-8">
@@ -120,6 +126,12 @@ const JobListPage = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
+            <button
+              onClick={handleBrowseAllJobs}
+              className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
+            >
+              Browse All Jobs
+            </button>
           </div>
 
           <div className="space-y-6">
@@ -139,7 +151,7 @@ const JobListPage = () => {
                   <div className="flex flex-col md:flex-row items-center md:items-start text-gray-600 mt-2 space-y-2 md:space-y-0">
                     <span className="mr-0 md:mr-4">📍 {job.location}</span>
                     <span className="mr-0 md:mr-4">🏠 {job.jobType}</span>
-                    <span className="mr-0 md:mr-4">📂 {job.category}</span>
+                    <span className="mr-0 md:mr-4">📂 {job.jobCategory}</span>
                     <span className="mr-0 md:mr-4">📅 {job.experience} Years</span>
                   </div>
                   <div className="flex space-x-2 mt-4 justify-center md:justify-start">

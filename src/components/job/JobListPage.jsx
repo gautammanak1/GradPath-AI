@@ -145,7 +145,7 @@ const JobListPage = () => {
                     <h4 className="text-xl font-semibold text-gray-900">{job.title}</h4>
                     <div className="flex justify-center md:justify-start items-center text-gray-600 mt-2 space-x-4">
                       <span>📍 {job.location}</span>
-                      <span>📂 {job.category}</span>
+                      <span>📂 {job.jobCategory}</span>
                       <span>📅 {job.experience} Years</span>
                     </div>
                     <div className="flex justify-center md:justify-start space-x-2 mt-4">
