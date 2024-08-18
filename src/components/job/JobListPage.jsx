@@ -2,12 +2,24 @@ import { useState, useEffect } from 'react';
 import { getDocs, collection } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 
+const convertMarkdownToHTML = (markdown) => {
+  return markdown
+    .replace(/## (.*)/g, '<h2>$1</h2>')
+    .replace(/### (.*)/g, '<h3>$1</h3>')
+    .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+    .replace(/\*(.*?)\*/g, '<i>$1</i>')
+    .replace(/- (.*)/g, '<li>$1</li>')
+    .replace(/\n/g, '<br>')
+    .replace(/([A-Z][a-z]+):/g, '<strong>$1:</strong>');
+};
+
 const JobListPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [jobs, setJobs] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedEmploymentTypes, setSelectedEmploymentTypes] = useState([]);
   const [selectedJobTypes, setSelectedJobTypes] = useState([]);
+  const [expandedJobId, setExpandedJobId] = useState(null);
   const jobsCollectionRef = collection(db, 'jobs');
 
   useEffect(() => {
@@ -87,6 +99,7 @@ const JobListPage = () => {
           </div>
         </div>
 
+
         {/* Job Listing Section */}
         <div className="w-3/4">
           <div className="flex justify-between items-center mb-8">
@@ -101,35 +114,49 @@ const JobListPage = () => {
 
           <div className="space-y-6">
             {filteredJobs.map((job) => (
-              <div key={job.id} className="bg-white p-6 rounded-lg shadow-md flex items-center">
-                <img
-                  className="h-16 w-16 rounded object-cover"
-                  src={job.logo}
-                  alt={`${job.company} logo`}
-                />
-                <div className="ml-6">
-                  <h3 className="text-lg font-bold text-gray-900">{job.company}</h3>
-                  <h4 className="text-xl font-semibold text-gray-900">{job.title}</h4>
-                  <div className="flex items-center text-gray-600 mt-2">
-                    <span className="mr-4">📍 {job.location}</span>
-                    <span className="mr-4">🏠 Remote</span>
-                    <span className="mr-4">📂 {job.category}</span>
-                    <span className="mr-4">📅 {job.experience} Years</span>
-                  </div>
-                  <div className="flex space-x-2 mt-4">
-                    <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">Full Time</span>
-                    <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">Open</span>
-                    <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">Job Post: {job.postedAt ? job.postedAt.toDate().toLocaleDateString() : 'Unknown'}</span>
+              <div key={job.id} className="bg-white p-6 rounded-lg shadow-md">
+                <div
+                  className="flex items-center cursor-pointer"
+                  onClick={() => setExpandedJobId(expandedJobId === job.id ? null : job.id)}
+                >
+                  <img
+                    className="h-16 w-16 rounded object-cover"
+                    src={job.logo}
+                    alt={`${job.company} logo`}
+                  />
+                  <div className="ml-6">
+                    <h3 className="text-lg font-bold text-gray-900">{job.company}</h3>
+                    <h4 className="text-xl font-semibold text-gray-900">{job.title}</h4>
+                    <div className="flex items-center text-gray-600 mt-2">
+                      <span className="mr-4">📍 {job.location}</span>
+                      <span className="mr-4">📂 {job.category}</span>
+                      <span className="mr-4">📅 {job.experience} Years</span>
+                    </div>
+                    <div className="flex space-x-2 mt-4">
+                      <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">Full Time</span>
+                      <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">Open</span>
+                      <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">Job Post: {job.postedAt ? job.postedAt.toDate().toLocaleDateString() : 'Unknown'}</span>
+                    </div>
                   </div>
                 </div>
-                <a
-                  href={job.applyLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="ml-auto bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
-                >
-                  Apply
-                </a>
+
+                {expandedJobId === job.id && (
+                  <div className="mt-4 bg-gray-100 p-4 rounded-lg">
+                    <h3 className="text-lg font-bold mb-2">Job Description</h3>
+                    <p
+                      className="text-gray-700"
+                      dangerouslySetInnerHTML={{ __html: convertMarkdownToHTML(job.description) }}
+                    ></p>
+                    <a
+                      href={job.applyLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-4 inline-block bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
+                    >
+                      Apply Now
+                    </a>
+                  </div>
+                )}
               </div>
             ))}
           </div>
