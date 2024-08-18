@@ -22,6 +22,11 @@ const JobListPage = () => {
   const [expandedJobId, setExpandedJobId] = useState(null);
   const jobsCollectionRef = collection(db, 'jobs');
 
+
+   // Pagination state
+   const [currentPage, setCurrentPage] = useState(1);
+   const [jobsPerPage, setJobsPerPage] = useState(5);
+
   useEffect(() => {
     const fetchJobs = async () => {
       const jobData = await getDocs(jobsCollectionRef);
@@ -47,22 +52,34 @@ const JobListPage = () => {
     return matchesSearch && matchesCategory && matchesEmploymentType && matchesJobType;
   });
 
+
+    // Pagination logic
+    const indexOfLastJob = currentPage * jobsPerPage;
+    const indexOfFirstJob = indexOfLastJob - jobsPerPage;
+    const currentJobs = filteredJobs.slice(indexOfFirstJob, indexOfLastJob);
+    const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
+  
+    const handlePageChange = (newPage) => {
+      if (newPage > 0 && newPage <= totalPages) {
+        setCurrentPage(newPage);
+      }
+    };
   return (
     <div className="min-h-screen bg-gray-100 py-10 px-4">
-      <div className="max-w-7xl mx-auto flex">
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row">
         {/* Filter Section */}
-        <div className="w-1/4 mr-8">
+        <div className="w-full md:w-1/4 mr-0 md:mr-8 mb-8 md:mb-0">
           <div className="bg-white p-6 rounded-lg shadow-md mb-6">
             <h3 className="text-xl font-bold mb-4">Job Category</h3>
             <div className="flex flex-col space-y-2">
               {['Engineering', 'Human Resource', 'Management', 'Business Development', 'Accounts', 'Marketing', 'Others'].map(category => (
-                <label key={category}>
+                <label key={category} className="cursor-pointer">
                   <input
                     type="checkbox"
                     checked={selectedCategories.includes(category)}
                     onChange={() => toggleSelection(selectedCategories, setSelectedCategories, category)}
                   /> 
-                  {category}
+                  <span className="ml-2">{category}</span>
                 </label>
               ))}
             </div>
@@ -71,13 +88,13 @@ const JobListPage = () => {
             <h3 className="text-xl font-bold mb-4">Employment Type</h3>
             <div className="flex flex-col space-y-2">
               {['Full Time', 'Part Time', 'Intern'].map(type => (
-                <label key={type}>
+                <label key={type} className="cursor-pointer">
                   <input
                     type="checkbox"
                     checked={selectedEmploymentTypes.includes(type)}
                     onChange={() => toggleSelection(selectedEmploymentTypes, setSelectedEmploymentTypes, type)}
                   />
-                  {type}
+                  <span className="ml-2">{type}</span>
                 </label>
               ))}
             </div>
@@ -86,26 +103,25 @@ const JobListPage = () => {
             <h3 className="text-xl font-bold mb-4">Job Type</h3>
             <div className="flex flex-col space-y-2">
               {['Remote', 'On Site', 'Hybrid'].map(type => (
-                <label key={type}>
+                <label key={type} className="cursor-pointer">
                   <input
                     type="checkbox"
                     checked={selectedJobTypes.includes(type)}
                     onChange={() => toggleSelection(selectedJobTypes, setSelectedJobTypes, type)}
                   />
-                  {type}
+                  <span className="ml-2">{type}</span>
                 </label>
               ))}
             </div>
           </div>
         </div>
 
-
         {/* Job Listing Section */}
-        <div className="w-3/4">
+        <div className="w-full md:w-3/4">
           <div className="flex justify-between items-center mb-8">
             <input
               type="text"
-              className="border p-3 w-full md:w-1/3 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500"
+              className="border p-3 w-full md:w-1/2 lg:w-1/3 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500"
               placeholder="Search jobs..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -114,9 +130,9 @@ const JobListPage = () => {
 
           <div className="space-y-6">
             {filteredJobs.map((job) => (
-              <div key={job.id} className="bg-white p-6 rounded-lg shadow-md">
+              <div key={job.id} className="bg-white p-6 rounded-lg shadow-md w-full">
                 <div
-                  className="flex items-center cursor-pointer"
+                  className="flex flex-col md:flex-row items-center cursor-pointer"
                   onClick={() => setExpandedJobId(expandedJobId === job.id ? null : job.id)}
                 >
                   <img
@@ -124,15 +140,15 @@ const JobListPage = () => {
                     src={job.logo}
                     alt={`${job.company} logo`}
                   />
-                  <div className="ml-6">
+                  <div className="ml-0 md:ml-6 mt-4 md:mt-0 text-center md:text-left w-full">
                     <h3 className="text-lg font-bold text-gray-900">{job.company}</h3>
                     <h4 className="text-xl font-semibold text-gray-900">{job.title}</h4>
-                    <div className="flex items-center text-gray-600 mt-2">
-                      <span className="mr-4">📍 {job.location}</span>
-                      <span className="mr-4">📂 {job.category}</span>
-                      <span className="mr-4">📅 {job.experience} Years</span>
+                    <div className="flex justify-center md:justify-start items-center text-gray-600 mt-2 space-x-4">
+                      <span>📍 {job.location}</span>
+                      <span>📂 {job.category}</span>
+                      <span>📅 {job.experience} Years</span>
                     </div>
-                    <div className="flex space-x-2 mt-4">
+                    <div className="flex justify-center md:justify-start space-x-2 mt-4">
                       <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">Full Time</span>
                       <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">Open</span>
                       <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">Job Post: {job.postedAt ? job.postedAt.toDate().toLocaleDateString() : 'Unknown'}</span>
@@ -161,20 +177,38 @@ const JobListPage = () => {
             ))}
           </div>
 
-          {/* Pagination */}
           <div className="flex justify-between items-center mt-6">
             <div>
               Rows per page: 
-              <select className="ml-2 border rounded-md">
+              <select
+                className="ml-2 border rounded-md"
+                value={jobsPerPage}
+                onChange={(e) => {
+                  setJobsPerPage(parseInt(e.target.value));
+                  setCurrentPage(1); // Reset to first page on items per page change
+                }}
+              >
                 <option value="5">5</option>
                 <option value="10">10</option>
                 <option value="20">20</option>
               </select>
             </div>
             <div>
-              <span>1-2 of 2</span>
-              <button className="ml-2">❮</button>
-              <button className="ml-2">❯</button>
+              <span>{`${indexOfFirstJob + 1}-${Math.min(indexOfLastJob, filteredJobs.length)} of ${filteredJobs.length}`}</span>
+              <button
+                className="ml-2"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                ❮
+              </button>
+              <button
+                className="ml-2"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                ❯
+              </button>
             </div>
           </div>
         </div>
