@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { addDoc, collection } from 'firebase/firestore';
-import { db } from '../../../../Job-Finder-Poc/frontend/src/components/firebaseConfig';
+import { db } from '../firebaseConfig';
 import { useNavigate } from 'react-router-dom';
 
 const JobPostForm = () => {
