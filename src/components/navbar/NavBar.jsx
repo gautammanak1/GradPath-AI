@@ -1,9 +1,10 @@
+// NavBar.jsx
 import { useState, useEffect } from 'react';
 import { Disclosure, Menu } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Link, useNavigate } from 'react-router-dom';
-import { signInWithPopup, onAuthStateChanged, signOut } from 'firebase/auth';
-import { auth, googleProvider } from '../firebaseConfig';
+import { signOut, onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../firebaseConfig';
 
 const navigation = [
   { name: 'Resume', href: '/resume' },
@@ -19,23 +20,26 @@ export default function NavBar() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
+      if (!currentUser) {
+        navigate('/Login'); // Redirect to login page if user is not authenticated
+      }
     });
     return () => unsubscribe();
-  }, []);
+  }, [navigate]);
 
-  const handleGoogleLogin = async () => {
+  const handleLogout = async () => {
     try {
-      await signInWithPopup(auth, googleProvider);
+      await signOut(auth);
+      setUser(null);
+      navigate('/Login'); // Redirect to login page after logout
     } catch (error) {
-      console.error('Login failed:', error);
+      console.error('Logout failed:', error);
     }
   };
 
-  const handleLogout = async () => {
-    await signOut(auth);
-    setUser(null);
-    navigate('/');
-  };
+  if (!user) {
+    return null; // Do not render NavBar if user is not authenticated
+  }
 
   return (
     <Disclosure as="nav" className="bg-[#F9FAFB]">
@@ -107,14 +111,7 @@ export default function NavBar() {
                       </Menu.Item>
                     </Menu.Items>
                   </Menu>
-                ) : (
-                  <button
-                    onClick={handleGoogleLogin}
-                    className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-500 hidden sm:block"
-                  >
-                    Sign in with Google
-                  </button>
-                )}
+                ) : null}
               </div>
             </div>
           </div>
@@ -132,23 +129,16 @@ export default function NavBar() {
                 </Disclosure.Button>
               ))}
             </div>
-            <div className="px-2 pb-3 pt-2">
-              {user ? (
+            {user && (
+              <div className="px-2 pb-3 pt-2">
                 <button
                   onClick={handleLogout}
                   className="block w-full bg-gray-50 px-5 py-3 text-center font-medium text-red-600 hover:bg-gray-100"
                 >
                   Logout
                 </button>
-              ) : (
-                <button
-                  onClick={handleGoogleLogin}
-                  className="block w-full bg-indigo-600 px-5 py-3 text-center font-medium text-white hover:bg-indigo-500"
-                >
-                  Sign in with Google
-                </button>
-              )}
-            </div>
+              </div>
+            )}
           </Disclosure.Panel>
         </>
       )}
