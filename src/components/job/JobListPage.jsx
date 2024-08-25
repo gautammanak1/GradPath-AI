@@ -22,10 +22,9 @@ const JobListPage = () => {
   const [expandedJobId, setExpandedJobId] = useState(null);
   const jobsCollectionRef = collection(db, 'jobs');
 
-
-   // Pagination state
-   const [currentPage, setCurrentPage] = useState(1);
-   const [jobsPerPage, setJobsPerPage] = useState(5);
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [jobsPerPage, setJobsPerPage] = useState(5);
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -45,25 +44,25 @@ const JobListPage = () => {
 
   const filteredJobs = jobs.filter(job => {
     const matchesSearch = job.title.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(job.category);
-    const matchesEmploymentType = selectedEmploymentTypes.length === 0 || selectedEmploymentTypes.includes(job.employmentType);
-    const matchesJobType = selectedJobTypes.length === 0 || selectedJobTypes.includes(job.jobType);
+    const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(job.jobCategory); // Ensure jobCategory matches your form field
+    const matchesEmploymentType = selectedEmploymentTypes.length === 0 || selectedEmploymentTypes.includes(job.employmentType); // Ensure employmentType matches your form field
+    const matchesJobType = selectedJobTypes.length === 0 || selectedJobTypes.includes(job.jobType); // Ensure jobType matches your form field
 
     return matchesSearch && matchesCategory && matchesEmploymentType && matchesJobType;
   });
 
+  // Pagination logic
+  const indexOfLastJob = currentPage * jobsPerPage;
+  const indexOfFirstJob = indexOfLastJob - jobsPerPage;
+  const currentJobs = filteredJobs.slice(indexOfFirstJob, indexOfLastJob);
+  const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
 
-    // Pagination logic
-    const indexOfLastJob = currentPage * jobsPerPage;
-    const indexOfFirstJob = indexOfLastJob - jobsPerPage;
-    const currentJobs = filteredJobs.slice(indexOfFirstJob, indexOfLastJob);
-    const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
-  
-    const handlePageChange = (newPage) => {
-      if (newPage > 0 && newPage <= totalPages) {
-        setCurrentPage(newPage);
-      }
-    };
+  const handlePageChange = (newPage) => {
+    if (newPage > 0 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 py-10 px-4">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row">
@@ -78,7 +77,7 @@ const JobListPage = () => {
                     type="checkbox"
                     checked={selectedCategories.includes(category)}
                     onChange={() => toggleSelection(selectedCategories, setSelectedCategories, category)}
-                  /> 
+                  />
                   <span className="ml-2">{category}</span>
                 </label>
               ))}
@@ -129,7 +128,7 @@ const JobListPage = () => {
           </div>
 
           <div className="space-y-6">
-            {filteredJobs.map((job) => (
+            {currentJobs.map((job) => (
               <div key={job.id} className="bg-white p-6 rounded-lg shadow-md w-full">
                 <div
                   className="flex flex-col md:flex-row items-center cursor-pointer"
@@ -146,12 +145,12 @@ const JobListPage = () => {
                     <div className="flex justify-center md:justify-start items-center text-gray-600 mt-2 space-x-4">
                       <span>📍 {job.location}</span>
                       <span>📂 {job.jobCategory}</span>
-                      <span>📅 {job.experience} Years</span>
+                      <span>📅 {job.experience}</span>
                     </div>
                     <div className="flex justify-center md:justify-start space-x-2 mt-4">
-                      <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">Full Time</span>
+                      <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">{job.jobType}</span>
                       <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">Open</span>
-                      <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">Job Post: {job.postedAt ? job.postedAt.toDate().toLocaleDateString() : 'Unknown'}</span>
+                      <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">Job Post: {job.postedAt ? new Date(job.postedAt).toLocaleDateString() : 'Unknown'}</span>
                     </div>
                   </div>
                 </div>
@@ -194,20 +193,20 @@ const JobListPage = () => {
               </select>
             </div>
             <div>
-              <span>{`${indexOfFirstJob + 1}-${Math.min(indexOfLastJob, filteredJobs.length)} of ${filteredJobs.length}`}</span>
               <button
-                className="ml-2"
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
+                className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-400"
               >
-                ❮
+                Previous
               </button>
+              <span className="mx-4">{currentPage} / {totalPages}</span>
               <button
-                className="ml-2"
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
+                className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-400"
               >
-                ❯
+                Next
               </button>
             </div>
           </div>

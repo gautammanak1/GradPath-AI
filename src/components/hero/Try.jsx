@@ -12,14 +12,19 @@ const FetchPlatformSection = () => {
           className="hidden lg:block lg:w-1/3 absolute left-0 bottom-8 transform -translate-x-1/2"
         />
         <div className="mt-8 flex space-x-4">
-          <button className="rounded-full border-2 border-gray-300 px-6 py-2 text-gray-700 hover:bg-gray-200">
-            Schedule a demo
-          </button>
-          <button className="rounded-full bg-purple-600 px-6 py-2 text-white hover:bg-purple-700">
-            Try GradPath AI
-          </button>
+        <a href="https://calendly.com/gautammanak1/call-with-gautam" target="_blank" rel="noopener noreferrer">
+  <button className="rounded-full border-2 border-gray-300 px-6 py-2 text-gray-700 hover:bg-gray-200">
+    Schedule a demo
+  </button>
+</a>
+<a href="/job" className="inline-block">
+  <button className="rounded-full bg-purple-600 px-6 py-2 text-white hover:bg-purple-700">
+    Try GradPath AI
+  </button>
+</a>
+
         </div>
-        {/* Right SVG */}
+
         <img
           alt="Right SVG"
           src="/right-svg.svg"

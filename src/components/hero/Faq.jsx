@@ -53,7 +53,7 @@ export default function Faq() {
       </div>
      
       {/* FAQ Content */}
-      <div className="mx-auto max-w-4xl divide-y divide-gray-900/10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 divide-y divide-gray-900/10">
         <h2 className="text-3xl font-bold leading-10 tracking-tight text-primary text-center sm:text-left">Frequently asked questions</h2>
         <dl className="mt-10 space-y-6 divide-y divide-gray-900/10">
           {faqs.map((faq) => (
