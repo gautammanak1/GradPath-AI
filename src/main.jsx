@@ -1,7 +1,8 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 
-// import Page from './Page.jsx';
+
+
 import './index.css';
 import App from './components/login.jsx'
 
@@ -10,7 +11,8 @@ const root = createRoot(container);
 
 root.render(
   <React.StrictMode>
-<App/>
+
+ <App/>
     {/* <Page/> */}
   </React.StrictMode>
 )

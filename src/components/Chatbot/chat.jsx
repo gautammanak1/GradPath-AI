@@ -46,7 +46,7 @@ const Chat = () => {
     setMessages([{ text: `Hello ${user?.displayName || 'there'}! Welcome to DishaBot. Let's get started!`, sender: 'bot' }]);
 
     // Event listener for when the user leaves the page
-    const handleBeforeUnload = (event) => {
+    const handleBeforeUnload = (_event) => {
       alert(`Hi ${user?.displayName || 'User'}, how are you?`);
     };
     window.addEventListener('beforeunload', handleBeforeUnload);
