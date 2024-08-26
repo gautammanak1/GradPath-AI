@@ -18,7 +18,7 @@ const FetchPlatformSection = () => {
   </button>
 </a>
 <a href="/job" className="inline-block">
-  <button className="rounded-full bg-purple-600 px-6 py-2 text-white hover:bg-purple-700">
+  <button className="rounded-full  bg-[#5F38FB] px-3.5 py-2.5 text-sm font-light text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
     Try GradPath AI
   </button>
 </a>

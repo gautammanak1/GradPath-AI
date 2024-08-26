@@ -2,7 +2,7 @@ import { useState } from 'react';
 import JobSearch from '../job/JobSearch';
 import JobList from '../job/JobList';
 import JobListPage from '../job/JobListPage';
-import JobUpdate from '../job/JobUpdate';
+
 import JobAbout from '../job/JobAbout';
 import JobHero from '../job/JobHero';
 import Feature from '../job/Feature';
@@ -55,7 +55,6 @@ const Page = () => {
           <Feature />
           <JobSearch onSearch={fetchJobs} />
           <JobList jobs={jobs} />
-          <JobUpdate />
         </>
       )}
 

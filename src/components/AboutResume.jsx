@@ -66,7 +66,7 @@ const AboutPage = () => {
        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <header className="text-center mb-8">
         <div className="flex justify-center items-center">
-          <CloudArrowUpIcon className="w-12 h-12 mr-4 text-blue-500" />
+          <CloudArrowUpIcon className="w-12 h-12 mr-4  text-tertiary" />
           <h1 className="text-4xl font-bold text-gray-800 mb-2">About the Resume Analysis Agent</h1>
         </div>
         <h2 className="text-2xl text-gray-600">Your Personal Resume Improvement Companion</h2>

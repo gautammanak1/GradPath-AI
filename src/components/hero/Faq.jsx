@@ -73,7 +73,7 @@ export default function Faq() {
                     </DisclosureButton>
                   </dt>
                   <DisclosurePanel as="dd" className="mt-2 pr-0 sm:pr-12">
-                    <p className="text-base leading-7 text-gray-600">{faq.answer}</p>
+                    <p className="text-base text-secondary leading-7 text-gray-600">{faq.answer}</p>
                   </DisclosurePanel>
                 </>
               )}

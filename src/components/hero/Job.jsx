@@ -54,7 +54,7 @@ const JobListPage = () => {
           />
           <button
             onClick={handleBrowseAllJobs}
-            className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 mt-4 md:mt-0"
+            className="rounded-md bg-[#5F38FB] px-3.5 py-2.5 text-sm font-light text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
             Browse All Jobs
           </button>
@@ -91,7 +91,7 @@ const JobListPage = () => {
                 href={job.applyLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-4 md:mt-0 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 text-center w-full md:w-auto"
+                className="mt-4 md:mt-0 rounded-lg bg-[#5F38FB] px-3.5 py-2.5 text-sm font-light text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                 Apply
               </a>

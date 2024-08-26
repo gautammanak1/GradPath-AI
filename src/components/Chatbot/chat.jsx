@@ -88,85 +88,74 @@ const Chat = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen">
-      <nav className="flex-shrink-0 bg-white border-b border-gray-200 shadow">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex items-center text-xl font-semibold">
-              <EyeWithBlinkAnimation />
-              DishaBot
+    <><h2 className="text-4xl font-light text-center text-primary sm:text-5xl  mb-12">
+      DishaBot
+    </h2><div className="flex flex-col h-screen max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div className="flex-1 flex items-center justify-center overflow-hidden bg-gray-100">
+          <div className="bg-white rounded-lg border border-gray-300 shadow-lg overflow-hidden w-full h-full">
+            <div className="flex flex-col h-full">
+              <header className="flex-shrink-0 mb-2 p-4 border-b border-gray-200 flex items-center">
+                <img
+                  src={userDetails.profilePicture}
+                  alt="Profile"
+                  className="h-10 w-10 rounded-full mr-3" />
+                <h2 className="text-xl font-semibold">{userDetails.name}</h2>
+              </header>
+
+              <main className="flex-1 overflow-y-auto p-4">
+                <div className="flex flex-col gap-4">
+                  {messages.map((message, index) => (
+                    <div
+                      key={index}
+                      className={`flex gap-3 text-sm ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                    >
+                      <p className={`p-2 rounded-lg ${message.sender === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}>
+                        <span className="block font-bold">{message.sender === '' ? '' : ''}</span>
+                        <span dangerouslySetInnerHTML={{ __html: message.text }}></span>
+                      </p>
+                      <div className="flex-shrink-0">
+                        {message.sender === 'user' && userDetails.profilePicture ? (
+                          <img
+                            src={userDetails.profilePicture}
+                            alt="User"
+                            className="w-8 h-8 rounded-full object-cover" />
+                        ) : (
+                          <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
+                            <span class="blink-left-right">👀</span>
+
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                  <div ref={messagesEndRef} />
+                </div>
+              </main>
+
+              <footer className="p-4 border-t border-gray-200">
+                <div className="flex items-center gap-3">
+                  <input
+                    type="text"
+                    placeholder="Type your message"
+                    value={inputMessage}
+                    onChange={(e) => setInputMessage(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') sendMessage();
+                    } }
+                    className="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" />
+                  <button
+                    onClick={sendMessage}
+                    className="bg-[#5F38FB] text-white px-4 py-2 rounded-lg hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  >
+                    Send
+                  </button>
+                </div>
+              </footer>
             </div>
           </div>
         </div>
-      </nav>
-
-      <div className="flex-1 flex items-center justify-center overflow-hidden bg-gray-100">
-        <div className="bg-white rounded-lg border border-gray-300 shadow-lg overflow-hidden w-full h-full">
-          <div className="flex flex-col h-full">
-            <header className="flex-shrink-0 mb-2 p-4 border-b border-gray-200 flex items-center">
-              <img
-                src={userDetails.profilePicture}
-                alt="Profile"
-                className="h-10 w-10 rounded-full mr-3"
-              />
-              <h2 className="text-xl font-semibold">{userDetails.name}</h2>
-            </header>
-
-            <main className="flex-1 overflow-y-auto p-4">
-              <div className="flex flex-col gap-4">
-                {messages.map((message, index) => (
-                  <div
-                    key={index}
-                    className={`flex gap-3 text-sm ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-                  >
-                    <p className={`p-2 rounded-lg ${message.sender === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}>
-                      <span className="block font-bold">{message.sender === '' ? '' : ''}</span>
-                      <span dangerouslySetInnerHTML={{ __html: message.text }}></span>
-                    </p>
-                    <div className="flex-shrink-0">
-                      {message.sender === 'user' && userDetails.profilePicture ? (
-                        <img
-                          src={userDetails.profilePicture}
-                          alt="User"
-                          className="w-8 h-8 rounded-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
-                          <span class="blink-left-right">👀</span>
-
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
-                <div ref={messagesEndRef} />
-              </div>
-            </main>
-
-            <footer className="p-4 border-t border-gray-200">
-              <div className="flex items-center gap-3">
-                <input
-                  type="text"
-                  placeholder="Type your message"
-                  value={inputMessage}
-                  onChange={(e) => setInputMessage(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') sendMessage();
-                  }}
-                  className="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                />
-                <button
-                  onClick={sendMessage}
-                  className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                >
-                  Send
-                </button>
-              </div>
-            </footer>
-          </div>
-        </div>
-      </div>
-    </div>
+      </div></>
   );
 };
 
